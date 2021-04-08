@@ -13,6 +13,12 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
+/**
+ * Klasa predstavlja kontekst koji upravlja cookijima i parametrima.
+ * Također, zapisuje podatke na outputstream.
+ * @author vedran
+ *
+ */
 public class RequestContext {
 	private String DEFAULT_ENCODING = "UTF-8";
 	private int DEFAULT_STATUS_CODE = 200;
@@ -55,80 +61,162 @@ public class RequestContext {
 		this.SID = SID;
 	}
 
+	/**
+	 * Setter za kodnu stranicu. Baca {@link RuntimeException} ako je header već generiran
+	 * @param encoding
+	 */
 	public void setEncoding(String encoding) {
 		isGeneratedHeader();
 		this.encoding = Objects.requireNonNull(encoding, "Encoding can't be null!");
 		this.charset = Charset.forName(encoding);
 	}
 
+	/**
+	 * Setter za statusni kod. Baca {@link RuntimeException} ako je header već generiran
+	 * @param statusCode
+	 */
 	public void setStatusCode(int statusCode) {
 		isGeneratedHeader();
 		this.statusCode = statusCode;
 	}
 
+	/**
+	 * Setter za status tekst. Baca {@link RuntimeException} ako je header već generiran
+	 * @param statusText
+	 */
 	public void setStatusText(String statusText) {
 		isGeneratedHeader();
 		this.statusText = statusText;
 	}
 
+	/**
+	 * Setter za mime type. Baca {@link RuntimeException} ako je header već generiran
+	 * @param mimeType
+	 */
 	public void setMimeType(String mimeType) {
 		isGeneratedHeader();
 		this.mimeType = mimeType;
 	}
 
+	/**
+	 * Setter za duljinu sadržaja. Baca {@link RuntimeException} ako je header već generiran
+	 * @param contentLength
+	 */
 	public void setContentLength(Long contentLength) {
 		isGeneratedHeader();
 		this.contentLength = contentLength;
 	}
 
+	/**
+	 * Metoda dohvaća vrijednost parametra pod imenom name
+	 * @param name
+	 * @return vrijednost parametra pod imenom name
+	 */
 	public String getParameter(String name) {
 		return parameters.get(name);
 	}
 
+	/**
+	 * Metoda dohvaća nazive parametara i vraća ih kao unmodifiable Set
+	 * @return nazivi parametara i vraća ih kao unmodifiable Set
+	 */
 	public Set<String> getParameterNames() {
 		return Collections.unmodifiableSet(new HashSet<>(parameters.keySet()));
 	}
 
+	/**
+	 * Metoda dohvaća vrijednost parametra pod imenom name
+	 * @param name
+	 * @return vrijednost parametra pod imenom name
+	 */
 	public String getPersistentParameter(String name) {
 		return persistentParameters.get(name);
 	}
 
+	/**
+	 * Metoda dohvaća nazive parametara i vraća ih kao unmodifiable Set
+	 * @return nazivi parametara i vraća ih kao unmodifiable Set
+	 */
 	public Set<String> getPersistentParameterNames() {
 		return Collections.unmodifiableSet(new HashSet<>(persistentParameters.values()));
 	}
 
+	/**
+	 * Metoda dodaje u mapu vrijednost value pod ključem name
+	 * @param name ključ
+	 * @param value vrijednost
+	 */
 	public void setPersistentParameter(String name, String value) {
 		persistentParameters.put(name, value);
 	}
 
+	/**
+	 * Metoda miče ključ name i vrijednost pod tim ključem iz mape
+	 * @param name
+	 */
 	public void removePersistentParameter(String name) {
 		persistentParameters.remove(name);
 	}
 
+	/**
+	 * Metoda dohvaća vrijednost parametra pod imenom name
+	 * @param name
+	 * @return vrijednost parametra pod imenom name
+	 */
 	public String getTemporaryParameter(String name) {
 		return temporaryParameters.get(name);
 	}
 
+	/**
+	 * Metoda dohvaća nazive parametara i vraća ih kao unmodifiable Set
+	 * @return nazivi parametara i vraća ih kao unmodifiable Set
+	 */
 	public Set<String> getTemporaryParameterNames() {
 		return Collections.unmodifiableSet(new HashSet<>(temporaryParameters.values()));
 	}
 
+	/**
+	 * Metoda vraća id sesije
+	 * @return
+	 */
 	public String getSessionID() {
-		return "";
+		return SID;
 	}
 
+	/**
+	 * Metoda dodaje u mapu vrijednost value pod ključem name
+	 * @param name ključ
+	 * @param value vrijednost
+	 */
 	public void setTemporaryParameter(String name, String value) {
 		temporaryParameters.put(name, value);
 	}
 
+	/**
+	 * Metoda miče ključ name i vrijednost pod tim ključem iz mape
+	 * @param name
+	 */
 	public void removeTemporaryParameter(String name) {
 		temporaryParameters.remove(name);
 	}
 
+	/**
+	 * Metoda prima polje bajtova i piše ga u outputstream
+	 * @param data polje bajtova
+	 * @return this
+	 * @throws IOException
+	 */
 	public RequestContext write(byte[] data) throws IOException {
 		return write(data, 0, data.length);
 	}
 
+	/**
+	 * Metoda prima polje bajtova, pomak i duljinu i piše ga u outputstream. Prije nego što
+	 * se upišu podaci, ako nije jos generiran header, on se generira
+	 * @param data polje bajtova
+	 * @return this
+	 * @throws IOException
+	 */
 	public RequestContext write(byte[] data, int offset, int length) throws IOException {
 		if (!headerGenerated) {
 			generateHeader();
@@ -139,16 +227,30 @@ public class RequestContext {
 		return this;
 	}
 
+	/**
+	 * Metoda prima string i piše ga u outputstream
+	 * @param data polje bajtova
+	 * @return this
+	 * @throws IOException
+	 */
 	public RequestContext write(String text) throws IOException {
 		byte[] data = text.getBytes(charset);
 		return write(data);
 	}
 
+	/**
+	 * Metoda dodaje cookie u internu listu cookiea
+	 * @param cookie
+	 */
 	public void addRCCookie(RCCookie cookie) {
 		isGeneratedHeader();
 		outputCookies.add(cookie);
 	}
 
+	/**
+	 * Pomoćna metoda koja generira header
+	 * @throws IOException
+	 */
 	private void generateHeader() throws IOException {
 		charset = Charset.forName(encoding);
 		StringBuilder sb = new StringBuilder();
@@ -167,6 +269,10 @@ public class RequestContext {
 		outputStream.write(bytes, 0, bytes.length);
 	}
 
+	/**
+	 * Pomoćna metoda koja dodaje cookieje u header
+	 * @param sb
+	 */
 	private void appendCookies(StringBuilder sb) {
 		for (RCCookie c : outputCookies) {
 			sb.append("Set-Cookie: " + c.getName() + "=\"" + c.getValue() + "\"");
@@ -176,30 +282,52 @@ public class RequestContext {
 				sb.append("; Path=" + c.getPath());
 			if (c.getMaxAge() != null)
 				sb.append("; Max-Age=" + c.getMaxAge());
+			if(c.isHttpOnly()) sb.append("; HttpOnly");
+
 			sb.append("\r\n");
 		}
 	}
 
+	/**
+	 * Metoda baca {@link RuntimeException} ako je header već generiran
+	 */
 	private void isGeneratedHeader() {
 		if (headerGenerated)
 			throw new RuntimeException("Header is already generated!");
 	}
 
+	/**
+	 * Getter za dispatchera
+	 * @return dispatcher
+	 */
 	public IDispatcher getDispatcher() {
 		return dispatcher;
 	}
 
-	public String getSID() {
-		return SID;
-	}
 
+	/**
+	 * Klasa predstavlja implementaciju cookiea
+	 * @author vedran
+	 *
+	 */
 	public static class RCCookie {
 		private String name;
 		private String value;
 		private String domain;
 		private String path;
 		private Integer maxAge;
-
+		private boolean httpOnly;
+		
+		public RCCookie(String name, String value, Integer maxAge, String domain, String path, boolean httpOnly) {
+			super();
+			this.name = Objects.requireNonNull(name, "Name can't be null!");
+			this.value = Objects.requireNonNull(value, "Value can't be null!");
+			this.domain = domain;
+			this.path = path;
+			this.maxAge = maxAge;
+			this.httpOnly = httpOnly;
+		}
+		
 		public RCCookie(String name, String value, Integer maxAge, String domain, String path) {
 			super();
 			this.name = Objects.requireNonNull(name, "Name can't be null!");
@@ -209,24 +337,52 @@ public class RequestContext {
 			this.maxAge = maxAge;
 		}
 
+		/**
+		 * Getter za naziv cookiea
+		 * @return naziv cookiea
+		 */
 		public String getName() {
 			return name;
 		}
 
+		/**
+		 * Getter za vrijednost cookiea
+		 * @return vrijednost cookiea
+		 */
 		public String getValue() {
 			return value;
 		}
 
+		/**
+		 * Getter za domenu cookiea
+		 * @return domena cookiea
+		 */
 		public String getDomain() {
 			return domain;
 		}
 
+		/**
+		 * Getter za path cookiea
+		 * @return path cookiea
+		 */
 		public String getPath() {
 			return path;
 		}
 
+		/**
+		 * Getter za trajanje cookiea
+		 * @return trajanje cookiea
+		 */
 		public Integer getMaxAge() {
 			return maxAge;
+		}
+
+		/**
+		 * Getter za zastavicu httpOnly
+		 * @return <code>true</code> ako je, inače <code>false</code>
+		 */
+		public boolean isHttpOnly() {
+			return httpOnly;
 		}
 	}
 }

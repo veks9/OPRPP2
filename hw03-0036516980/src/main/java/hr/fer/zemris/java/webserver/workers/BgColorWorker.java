@@ -3,6 +3,11 @@ package hr.fer.zemris.java.webserver.workers;
 import hr.fer.zemris.java.webserver.IWebWorker;
 import hr.fer.zemris.java.webserver.RequestContext;
 
+/**
+ * Klasa predstavlja workera koji ažurira pozadinu
+ * @author vedran
+ *
+ */
 public class BgColorWorker implements IWebWorker {
 
 	@Override
@@ -17,6 +22,11 @@ public class BgColorWorker implements IWebWorker {
 		context.getDispatcher().dispatchRequest("/private/pages/colorChanged.smscr");
 	}
 
+	/**
+	 * Pomoćna metoda koja ispituje je li broj u hexadekadskom zapisu duljine 6
+	 * @param bgcolor
+	 * @return
+	 */
 	private boolean isHexNumber(String bgcolor) {
 		char[] arr = bgcolor.toCharArray();
 		if (arr.length != 6)

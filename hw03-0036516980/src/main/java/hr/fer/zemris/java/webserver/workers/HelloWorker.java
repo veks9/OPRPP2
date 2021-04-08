@@ -6,6 +6,11 @@ import java.util.Date;
 import hr.fer.zemris.java.webserver.IWebWorker;
 import hr.fer.zemris.java.webserver.RequestContext;
 
+/**
+ * Klasa predstavlja workera koji ispisuje trenutno vrijeme i koliko je dugo predano ime
+ * @author vedran
+ *
+ */
 public class HelloWorker implements IWebWorker {
 	@Override
 	public void processRequest(RequestContext context) {

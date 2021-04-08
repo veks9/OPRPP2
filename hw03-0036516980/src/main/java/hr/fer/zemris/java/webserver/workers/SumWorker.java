@@ -3,6 +3,11 @@ package hr.fer.zemris.java.webserver.workers;
 import hr.fer.zemris.java.webserver.IWebWorker;
 import hr.fer.zemris.java.webserver.RequestContext;
 
+/**
+ * Klasa predstavlja workera koji primi 2 parametra i zbroji ih
+ * @author vedran
+ *
+ */
 public class SumWorker implements IWebWorker {
 	private final static String EVEN_PHOTO = "../../images/rick.gif";
 	private final static String ODD_PHOTO = "../../images/morty.gif";

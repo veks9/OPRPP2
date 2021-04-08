@@ -5,6 +5,11 @@ import java.util.Set;
 import hr.fer.zemris.java.webserver.IWebWorker;
 import hr.fer.zemris.java.webserver.RequestContext;
 
+/**
+ * Klasa predstavlja workera koji ispisuje tablicu sa parametrima iz contexta
+ * @author vedran
+ *
+ */
 public class EchoParams implements IWebWorker {
 
 	@Override
@@ -25,8 +30,5 @@ public class EchoParams implements IWebWorker {
 		sb.append("</body></html>");
 		
 		context.write(sb.toString());
-		
-		
-
 	}
 }

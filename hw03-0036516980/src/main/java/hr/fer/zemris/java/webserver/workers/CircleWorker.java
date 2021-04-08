@@ -11,6 +11,11 @@ import javax.imageio.ImageIO;
 import hr.fer.zemris.java.webserver.IWebWorker;
 import hr.fer.zemris.java.webserver.RequestContext;
 
+/**
+ * Klasa predstavlja workera koji generira i ispisuje krug
+ * @author vedran
+ *
+ */
 public class CircleWorker implements IWebWorker {
 
 	private int IMAGE_WIDTH = 200;

@@ -31,6 +31,11 @@ import hr.fer.oprpp1.custom.scripting.parser.SmartScriptParser;
 import hr.fer.zemris.java.custom.scripting.exec.SmartScriptEngine;
 import hr.fer.zemris.java.webserver.RequestContext.RCCookie;
 
+/**
+ * Klasa predstavlja poslužitelj koji obrađuje zahtjeve klijenta
+ * @author vedran
+ *
+ */
 public class SmartHttpServer {
 	private String address;
 	private String domainName;
@@ -71,6 +76,14 @@ public class SmartHttpServer {
 
 	}
 
+	/**
+	 * Pomoćna metoda koja inicijalizira varijable iz config datoteke
+	 * @param p
+	 * @throws IOException
+	 * @throws ClassNotFoundException
+	 * @throws IllegalAccessException
+	 * @throws InstantiationException
+	 */
 	private void initializeVariablesFromProperties(Properties p)
 			throws IOException, ClassNotFoundException, IllegalAccessException, InstantiationException {
 		address = p.getProperty("server.address").trim();
@@ -83,6 +96,11 @@ public class SmartHttpServer {
 		initializeWorkersFromProperties(p);
 	}
 
+	/**
+	 * Pomoćna metoda koja čita workere iz config datoteke
+	 * @param p
+	 * @throws IOException
+	 */
 	private void initializeWorkersFromProperties(Properties p) throws IOException {
 		String path = p.getProperty("server.workers");
 		Path workersConfig = Paths.get(path);
@@ -115,6 +133,14 @@ public class SmartHttpServer {
 		}
 	}
 
+	/**
+	 * Pomoćna metoda koja vraća workera ako posotji
+	 * @param fqcn
+	 * @return
+	 * @throws ClassNotFoundException
+	 * @throws InstantiationException
+	 * @throws IllegalAccessException
+	 */
 	private IWebWorker getWebWorker(String fqcn)
 			throws ClassNotFoundException, InstantiationException, IllegalAccessException {
 		Class<?> referenceToClass = this.getClass().getClassLoader().loadClass(fqcn);
@@ -124,6 +150,11 @@ public class SmartHttpServer {
 		return iww;
 	}
 
+	/**
+	 * Pomoćna metoda koja čita mime types iz config datoteke
+	 * @param p properties
+	 * @throws IOException
+	 */
 	private void initializeMimeTypesFromProperties(Properties p) throws IOException {
 		Path mimeConfigPath = Paths.get(p.getProperty("server.mimeConfig"));
 		List<String> lines = Files.readAllLines(mimeConfigPath);
@@ -135,6 +166,9 @@ public class SmartHttpServer {
 		}
 	}
 
+	/**
+	 * Metoda pokreće rad poslužitelja ako već nije pokrenut i  dretve za čišćenje
+	 */
 	protected synchronized void start() {
 		if (serverThread != null && serverThread.isAlive())
 			return;
@@ -146,13 +180,20 @@ public class SmartHttpServer {
 		sessionCleaningThread.start();
 	}
 
+	/**
+	 * Metoda zaustavlja rad poslužitelja
+	 */
 	protected synchronized void stop() {
-		System.out.println("tu sam");
 		serverThread.run = false;
 		sessionCleaningThread.run = false;
 		threadPool.shutdown();
 	}
 
+	/**
+	 * Klasa predstavlja serversku dretvu koja radi i pokreće klijentske dretve 
+	 * @author vedran
+	 *
+	 */
 	protected class ServerThread extends Thread {
 		private boolean run = true;
 
@@ -181,7 +222,12 @@ public class SmartHttpServer {
 		}
 	}
 
-	protected class SessionCleaningThread extends Thread {
+	/**
+	 * Klasa predstavlja dretvu koja čisti zastarjele sesije
+	 * @author vedran
+	 *
+	 */
+	private class SessionCleaningThread extends Thread {
 		private boolean run = true;
 
 		@Override
@@ -204,6 +250,11 @@ public class SmartHttpServer {
 		}
 	}
 
+	/**
+	 * Klasa predstavlja radnika za klijenta
+	 * @author vedran
+	 *
+	 */
 	private class ClientWorker implements Runnable, IDispatcher {
 		private static final String SCRIPT_EXTENSION = "smscr";
 		private static final String WORKERS_PACKET = "hr.fer.zemris.java.webserver.workers.";
@@ -275,6 +326,12 @@ public class SmartHttpServer {
 			}
 		}
 
+		/**
+		 * Metoda iz headersa iz cookiesa saznaje je li klijent već bio spojen,
+		 * ako je onda vrati njegovu sesiju. Ako nije bio spojen, registrira korisnika i 
+		 * napravi novi cookie
+		 * @param headers
+		 */
 		private synchronized void checkSession(List<String> headers) {
 			String sidCandidate = null, sid = null;
 			for (String line : headers) {
@@ -296,15 +353,25 @@ public class SmartHttpServer {
 			permPrams = entry.map;
 		}
 
+		/**
+		 * Pomoćna metoda koja registrira klijenta
+		 * @return
+		 */
 		private SessionMapEntry registerClient() {
 			SID = generateSID();
 			SessionMapEntry entry = new SessionMapEntry(SID, host, System.currentTimeMillis() / 1000 + sessionTimeout,
 					new ConcurrentHashMap<>());
 			sessions.put(SID, entry);
-			outputCookies.add(new RCCookie("sid", SID, null, host, "/"));
+			outputCookies.add(new RCCookie("sid", SID, null, host, "/", true));
 			return entry;
 		}
 
+		/**
+		 * Pomoćna metoda koja se zove kad se pronađe kandidat za sid te se ispituje
+		 * je li valjan. Vraća se entry ako je valjan, inače null
+		 * @param sidCandidate
+		 * @return
+		 */
 		private SessionMapEntry foundCandidate(String sidCandidate) {
 			SessionMapEntry entry = sessions.get(sidCandidate);
 			if (entry == null)
@@ -318,6 +385,10 @@ public class SmartHttpServer {
 			return entry;
 		}
 
+		/**
+		 * Pomoćna metoda koja generira SID. On se sastoji od 20 velikih slova
+		 * @return sid
+		 */
 		private String generateSID() {
 			StringBuilder sb = new StringBuilder();
 			for (int i = 0; i < 20; i++) {
@@ -327,6 +398,11 @@ public class SmartHttpServer {
 			return sb.toString();
 		}
 
+		/**
+		 * Pomoćna metoda koja u cookiesima traži i vraća vrijednost od "sid=vrijednost", null ako se ne nađe
+		 * @param cookies
+		 * @return
+		 */
 		private String getSidCandidate(String[] cookies) {
 			String sidCandidate = null;
 			for (int i = 0; i < cookies.length; i++) {
@@ -339,6 +415,10 @@ public class SmartHttpServer {
 			return sidCandidate;
 		}
 
+		/**
+		 * Pomoćna metoda koja parsira parametre predane u url-u
+		 * @param paramString
+		 */
 		private void parseParameters(String paramString) {
 			String[] parameters = paramString.split("&");
 			for (int i = 0; i < parameters.length; i++) {
@@ -348,6 +428,10 @@ public class SmartHttpServer {
 
 		}
 
+		/**
+		 * Pomoćna metoda koja u headersima nađe Host: i spremi vrijednost hosta
+		 * @param headers
+		 */
 		private void findHostName(List<String> headers) {
 			for (String line : headers) {
 				if (!line.startsWith("Host:"))
@@ -359,6 +443,12 @@ public class SmartHttpServer {
 				host = domainName;
 		}
 
+		/**
+		 * Pomoćna metoda koja iz {@link InputStream}a is čita bajtove
+		 * @param is
+		 * @return
+		 * @throws IOException
+		 */
 		private Optional<byte[]> readRequest(InputStream is) throws IOException {
 			ByteArrayOutputStream bos = new ByteArrayOutputStream();
 			int state = 0;
@@ -409,6 +499,11 @@ public class SmartHttpServer {
 			return Optional.of(bos.toByteArray());
 		}
 
+		/**
+		 * Pomoćna metoda koja primi headerse u obliku stringa i splita ih i vrati listu
+		 * @param requestHeader headeri
+		 * @return
+		 */
 		private List<String> extractHeaders(String requestHeader) {
 			List<String> headers = new ArrayList<String>();
 			String currentLine = null;
@@ -431,14 +526,21 @@ public class SmartHttpServer {
 			return headers;
 		}
 
-		private void sendResponseWithData(OutputStream cos, int statusCode, String statusText, String contentType,
-				byte[] data) throws IOException {
-			ostream.write(data);
-			ostream.flush();
-		}
-
+		/**
+		 * Pomoćna metoda koja šalje odgovor kad dođe do greške
+		 * @param cos outputstream
+		 * @param statusCode statusni kod
+		 * @param statusText statusni tekst
+		 * @throws IOException
+		 */
 		private void sendEmptyResponse(OutputStream cos, int statusCode, String statusText) throws IOException {
-			sendResponseWithData(cos, statusCode, statusText, "text/plain;charset=UTF-8", new byte[0]);
+			cos.write((version + " " + statusCode+" "+statusText+"\r\n"+
+					"Server: simple java server\r\n"+
+					"Content-Type: text/plain;charset=UTF-8\r\n"+
+					"Content-Length: 0\r\n"+
+					"Connection: close\r\n"+
+					"\r\n").getBytes(StandardCharsets.US_ASCII));
+			cos.flush();
 		}
 
 		@Override
@@ -446,6 +548,13 @@ public class SmartHttpServer {
 			internalDispatchRequest(urlPath, false);
 		}
 
+		/**
+		 * Pomoćna metoda koja preusmjerava na predani urlPath. DirectCall zastavica 
+		 * služi za provvjeravanje je li netko izvana pozvao nešto što se ne smije
+		 * @param urlPath gdje se mora ići
+		 * @param directCall zastavica 
+		 * @throws Exception
+		 */
 		private void internalDispatchRequest(String urlPath, boolean directCall) throws Exception {
 			checkRequestContext();
 
@@ -474,6 +583,7 @@ public class SmartHttpServer {
 			Path requestedPath = documentRoot.resolve(urlPath.substring(1));
 			if (documentRoot.startsWith(requestedPath)) {
 				sendEmptyResponse(ostream, 403, "Forbidden");
+				return;
 			}
 
 			if (!Files.exists(requestedPath) || !Files.isReadable(requestedPath)) {
@@ -493,6 +603,12 @@ public class SmartHttpServer {
 			}
 		}
 
+		/**
+		 * Pomoćna metoda koja vraća statični sadržaj tj. sve što nije .smscr
+		 * @param requestedPath
+		 * @param mimeType
+		 * @throws IOException
+		 */
 		private void returnStaticContent(Path requestedPath, String mimeType) throws IOException {
 			checkRequestContext();
 			rc.setMimeType(mimeType);
@@ -514,6 +630,12 @@ public class SmartHttpServer {
 
 		}
 
+		/**
+		 * Pomoćna metoda koja parsira i izvršava .smscr datoteke
+		 * @param requestedPath
+		 * @param mimeType
+		 * @throws IOException
+		 */
 		private void parseSmartScript(Path requestedPath, String mimeType) throws IOException {
 			String docBody = new String(Files.readAllBytes(requestedPath), StandardCharsets.UTF_8);
 			checkRequestContext();
@@ -525,12 +647,20 @@ public class SmartHttpServer {
 			csocket.close();
 		}
 
+		/**
+		 * Pomoćna metoda koja stvara context ako je prazan
+		 */
 		private void checkRequestContext() {
 			if (rc == null)
 				rc = new RequestContext(ostream, params, permPrams, outputCookies, this, tempParams, SID);
 		}
 	}
 
+	/**
+	 * Klasa predstavlja entry mape sesija
+	 * @author vedran
+	 *
+	 */
 	private static class SessionMapEntry {
 		String SID;
 		String host;

@@ -19,6 +19,11 @@ import hr.fer.oprpp1.custom.scripting.nodes.INodeVisitor;
 import hr.fer.oprpp1.custom.scripting.nodes.TextNode;
 import hr.fer.zemris.java.webserver.RequestContext;
 
+/**
+ * Klasa predstavlja engine koji izvrši ono što parser parsira
+ * @author vedran
+ *
+ */
 public class SmartScriptEngine {
 	private DocumentNode documentNode;
 	private RequestContext requestContext;
@@ -94,6 +99,12 @@ public class SmartScriptEngine {
 			}
 		}
 
+		/**
+		 * Pomoćna metoda koja prima {@link ElementFunction} i stog {@link ValueWrapper} te ovisno o funkciji
+		 * radi što je potrebno 
+		 * @param e funckija
+		 * @param stack stog
+		 */
 		private void caseFunction(ElementFunction e, Stack<ValueWrapper> stack) {
 			String function = e.asText().substring(1);
 
@@ -166,6 +177,12 @@ public class SmartScriptEngine {
 			}
 		}
 
+		/**
+		 * Pomoćna metoda koja prima {@link ElementOperator} i stog {@link ValueWrapper} te ovisno o operatoru
+		 * radi što je potrebno 
+		 * @param e operator
+		 * @param stack stog
+		 */
 		private void caseOperator(ElementOperator e, Stack<ValueWrapper> stack) {
 			ValueWrapper v1 = stack.pop();
 			ValueWrapper v2 = stack.pop();
@@ -205,6 +222,9 @@ public class SmartScriptEngine {
 		this.requestContext = Objects.requireNonNull(requestContext);
 	}
 
+	/**
+	 * Metoda koja pokreće engine
+	 */
 	public void execute() {
 		documentNode.accept(visitor);
 	}
