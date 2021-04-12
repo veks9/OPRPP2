@@ -14,6 +14,8 @@
 		</style>
 	</head>
 	<body>
-		<a href="colors.jsp">Background color chooser</a><br>
+		<a href="setcolor">Background color chooser</a><br>
+		<hr>
+		<a href="trigonometric?a=0&b=90">Trigonometric functions</a>
 	</body>
 </html>	

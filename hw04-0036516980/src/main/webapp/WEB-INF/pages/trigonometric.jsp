@@ -5,7 +5,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>Home</title>
+		<title>Trigonometric functions</title>
 		<meta charset="UTF-8">
 		<style>
 			body {
