@@ -1,6 +1,7 @@
 package hr.fer.zemris.webapp.servlets;
 
 import java.io.IOException;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -8,20 +9,18 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-@WebServlet("/setcolor")
-public class SetColorServlet extends HttpServlet{
+import hr.fer.zemris.webapp.util.Band;
+import hr.fer.zemris.webapp.util.Util;
+
+@WebServlet("/glasanje")
+public class GlasanjeServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
-	public SetColorServlet() {
-		// TODO Auto-generated constructor stub
-	}
-	
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		String color = req.getParameter("color");
-		if(color != null)
-			req.getSession().setAttribute("pickedBgCol", color);
+		Map<Integer, Band> bands = Util.getBands(req);
 
-		req.getRequestDispatcher("/WEB-INF/pages/colors.jsp").forward(req, resp);
+		req.getSession().setAttribute("bands", bands);
+		req.getRequestDispatcher("/WEB-INF/pages/glasanjeIndex.jsp").forward(req, resp);
 	}
 }

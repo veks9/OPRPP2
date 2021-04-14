@@ -1,0 +1,11 @@
+1	The Beatles	https://www.youtube.com/watch?v=45cYwDMibGo
+2	Coldplay	https://www.youtube.com/watch?v=RB-RcX5DS5A
+3	twenty one pilots	https://www.youtube.com/watch?v=pXRviuL6vMY
+4	Arctic Monkeys	https://www.youtube.com/watch?v=ma9I9VBKPiw
+5	Pink Floyd	https://www.youtube.com/watch?v=IXdNnw99-Ic
+6	U2	https://www.youtube.com/watch?v=ujNeHIo7oTE
+7	Fleetwood Mac	https://www.youtube.com/watch?v=JDG2m5hN1vo
+8	Dire Straits	https://www.youtube.com/watch?v=wTP2RUD_cL0
+9	Red Hot Chilli Peppers	https://www.youtube.com/watch?v=ifXalt3MJtM
+10	Kings of Leon	https://www.youtube.com/watch?v=RF0HhrwIwp0
+11	Queen	https://www.youtube.com/watch?v=fJ9rUzIMcZQ

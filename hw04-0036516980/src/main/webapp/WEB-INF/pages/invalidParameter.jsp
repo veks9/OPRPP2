@@ -5,7 +5,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>Trigonometric functions</title>
+		<title>Invalid parameter</title>
 		<meta charset="UTF-8">
 		<style>
 			body {
@@ -15,12 +15,10 @@
 	</head>
 	<body>
 		<a href="/webapp2">Home</a>
-		<div>
-			<table>
-				<c:forEach var="trigonometricEntry" items="${list}">
-					<tr><td>${trigonometricEntry.number}</td><td>${trigonometricEntry.sin}</td><td>${trigonometricEntry.cos}</td></tr>
-				</c:forEach>
-			</table>
-		</div>
+		<p>Specified parameters were invalid. Here are allowed:<br>
+			a has to be from interval [-100, 100]<br>
+			b has to be from interval [-100, 100]<br>
+			n has to be from interval [1, 5]
+		</p>
 	</body>
 </html>	
