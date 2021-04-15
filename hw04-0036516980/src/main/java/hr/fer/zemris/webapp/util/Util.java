@@ -12,8 +12,20 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+/**
+ * Util klasa za web aplikaciju glasanja
+ * @author vedran
+ *
+ */
 public class Util {
 
+	/**
+	 * Metoda dohvaća bendove iz datoteke na disku ili ako datoteka ne postoji
+	 * kreira ju. Vraća mapu sa idjevima kao ključevima i bendom kao vrijednosti
+	 * @param req request
+	 * @return mapa
+	 * @throws IOException
+	 */
 	public static Map<Integer, Band> getBands(HttpServletRequest req) throws IOException {
 		String fileName = req.getServletContext().getRealPath("/WEB-INF/glasanje-definicija.txt");
 		File file = new File(fileName);
@@ -34,6 +46,15 @@ public class Util {
 		return bands;
 	}
 
+	/**
+	 * Metoda puni mapu bendova bands sa vrijednostima glasanja iz datoteke
+	 * koja se nalazi na fileName putanji
+	 * @param fileName putanja do datoteke na disku 
+	 * @param bands mapa bendova
+	 * @return mapa bendova sa ažuriranim glasovima
+	 * @throws FileNotFoundException
+	 * @throws IOException
+	 */
 	public static Map<Integer, Band> fillWithVotes(String fileName, Map<Integer, Band> bands) throws FileNotFoundException, IOException {
 		if (Files.exists(Paths.get(fileName))) {
 			try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {

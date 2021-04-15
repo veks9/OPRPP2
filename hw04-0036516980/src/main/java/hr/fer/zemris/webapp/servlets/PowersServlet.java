@@ -13,6 +13,13 @@ import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 
+/**
+ * Servlet predstavlja klasu koja generira excel dokument 
+ * koji ima n listova na kojem se nalaze potencije na n-tu brojeva
+ * između a i b
+ * @author vedran
+ *
+ */
 @WebServlet("/powers")
 public class PowersServlet extends HttpServlet {
 	private int a;
@@ -47,6 +54,18 @@ public class PowersServlet extends HttpServlet {
 		sos.flush();	
 	}
 
+	/**
+	 * Pomoćna metoda koja ispituje jesu li uneseni parametri valjani.
+	 * Ako jesu, parisra ih, ako nisu, zahtjev se proslijeđuje na invalidParameters.jsp
+	 * @param aString a kao tekst
+	 * @param bString b kao tekst
+	 * @param nString n kao tekst
+	 * @param req request
+	 * @param resp response
+	 * @return
+	 * @throws ServletException
+	 * @throws IOException
+	 */
 	private boolean checkParams(String aString, String bString, String nString, HttpServletRequest req,
 			HttpServletResponse resp) throws ServletException, IOException {
 		if (aString != null && bString != null && nString != null) {

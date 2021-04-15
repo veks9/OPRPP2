@@ -20,6 +20,11 @@ import org.jfree.data.general.DefaultPieDataset;
 import hr.fer.zemris.webapp.util.Band;
 import hr.fer.zemris.webapp.util.Result;
 
+/**
+ * Klasa predstavlja servlet koji generira pie chart rezultata glasanja
+ * @author vedran
+ *
+ */
 @WebServlet("/glasanje-grafika")
 public class GlasanjeChartServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
@@ -38,6 +43,11 @@ public class GlasanjeChartServlet extends HttpServlet {
 		ChartUtils.writeChartAsPNG(outputStream, chart, width, height);
 	}
 
+	/**
+	 * Pomoćna metoda koja generira pie chart
+	 * @param results
+	 * @return
+	 */
 	@SuppressWarnings("unchecked")
 	public JFreeChart getChart(List<Result> results) {
 		DefaultPieDataset dataset = new DefaultPieDataset();

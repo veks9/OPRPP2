@@ -17,6 +17,7 @@
 		<a href="/webapp2">Home</a>
 		<div>
 			<table>
+				<tr><td>Number</td><td>Sin(number)</td><td>Cos(number)</td></tr>
 				<c:forEach var="trigonometricEntry" items="${list}">
 					<tr><td>${trigonometricEntry.number}</td><td>${trigonometricEntry.sin}</td><td>${trigonometricEntry.cos}</td></tr>
 				</c:forEach>

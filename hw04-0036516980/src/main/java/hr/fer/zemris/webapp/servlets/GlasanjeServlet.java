@@ -12,6 +12,12 @@ import javax.servlet.http.HttpServletResponse;
 import hr.fer.zemris.webapp.util.Band;
 import hr.fer.zemris.webapp.util.Util;
 
+/**
+ * Klasa predstavlja servlet koji dohvaća nazive bendova i postavlja
+ * sesijsku varijablu
+ * @author vedran
+ *
+ */
 @WebServlet("/glasanje")
 public class GlasanjeServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;

@@ -19,6 +19,12 @@ import javax.servlet.http.HttpServletResponse;
 import hr.fer.zemris.webapp.util.Band;
 import hr.fer.zemris.webapp.util.Util;
 
+/**
+ * Klasa predstavlja servlet koji dohvaća podatke iz baze i 
+ * ažurira ih. Kada je gotov s tim preusmjeruje na glasanje-rezultati
+ * @author vedran
+ *
+ */
 @WebServlet("/glasanje-glasaj")
 public class GlasanjeGlasajServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;

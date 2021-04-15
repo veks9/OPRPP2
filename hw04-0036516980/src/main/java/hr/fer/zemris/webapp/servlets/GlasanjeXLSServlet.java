@@ -16,6 +16,11 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 
 import hr.fer.zemris.webapp.util.Result;
 
+/**
+ * Klasa predstavlja servlet koji generira excel dokument rezultata glasanja
+ * @author vedran
+ *
+ */
 @WebServlet("/glasanje-xls")
 public class GlasanjeXLSServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;

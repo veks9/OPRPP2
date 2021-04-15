@@ -20,6 +20,14 @@ import hr.fer.zemris.webapp.util.Band;
 import hr.fer.zemris.webapp.util.Result;
 import hr.fer.zemris.webapp.util.Util;
 
+/**
+ * Klasa predstavlja servlet koji dohvaća svježe podatke iz "baze podataka":
+ * Te podatke sprema u sesijsku varijablu i traži pobjednike koje također sprema u
+ * sesijsku varijablu.
+ *  
+ * @author vedran
+ *
+ */
 @WebServlet("/glasanje-rezultati")
 public class GlasanjeRezultatiServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
@@ -57,6 +65,11 @@ public class GlasanjeRezultatiServlet extends HttpServlet {
 		req.getRequestDispatcher("/WEB-INF/pages/glasanjeRez.jsp").forward(req, resp);
 	}
 
+	/**
+	 * Pomoćna metoda koja vraća listu pobjednika u glasanju
+	 * @param bands mapa bendova(baza podataka)
+	 * @return lista pobjednika
+	 */
 	private List<Band> getWinners(Map<Integer, Band> bands) {
 		List<Band> winners = new ArrayList<>();
 		int maxVotes = 0;

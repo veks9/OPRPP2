@@ -10,6 +10,12 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+/**
+ * Klasa predstavlja servlet koji računa sinus i kosinus te rezultat pohranjuje
+ * kao sesijsku varijablu
+ * @author vedran
+ *
+ */
 @WebServlet("/trigonometric")
 public class TrigonometricServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
@@ -32,6 +38,11 @@ public class TrigonometricServlet extends HttpServlet {
 		req.getRequestDispatcher("/WEB-INF/pages/trigonometric.jsp").forward(req, resp);
 	}
 
+	/**
+	 * Pomoćna metoda koja ispituje jesu li parametri validni
+	 * @param aString
+	 * @param bString
+	 */
 	private void checkParams(String aString, String bString) {
 		a = aString == null ? 0 : Integer.parseInt(aString);
 		b = bString == null ? 360 : Integer.parseInt(bString);
@@ -42,12 +53,21 @@ public class TrigonometricServlet extends HttpServlet {
 			b = a + 720;
 	}
 
+	/**
+	 * Pomoćna metoda koja mijenja vrijednosti od klasnih varijabli a i b
+	 */
 	private void swap() {
 		int temp = a;
 		a = b;
 		b = temp;
 	}
 
+	/**
+	 * Pomoćna klasa koja modelira rezultat koji se treba ispisati na stranici.
+	 * Sastoji se od broja, njegovog sinusa i kosinusa
+	 * @author vedran
+	 *
+	 */
 	public static class TrigonometricEntry {
 		public int number;
 		public double sin;
@@ -60,14 +80,26 @@ public class TrigonometricServlet extends HttpServlet {
 			this.cos = Math.cos(Math.toRadians(number));;
 		}
 
+		/**
+		 * Getter za broj
+		 * @return broj
+		 */
 		public int getNumber() {
 			return number;
 		}
 
+		/**
+		 * Getter za sinus
+		 * @return sinus
+		 */
 		public double getSin() {
 			return sin;
 		}
 
+		/**
+		 * Getter za kosinus
+		 * @return kosinus
+		 */
 		public double getCos() {
 			return cos;
 		}

@@ -16,6 +16,11 @@ import org.jfree.chart.ChartUtils;
 import org.jfree.chart.JFreeChart;
 import org.jfree.data.general.DefaultPieDataset;
 
+/**
+ * Klasa predstavlja servlet koji generira pie chart
+ * @author vedran
+ *
+ */
 @WebServlet("/reportImage")
 public class ReportServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
@@ -33,6 +38,10 @@ public class ReportServlet extends HttpServlet {
 		ChartUtils.writeChartAsPNG(outputStream, chart, width, height);
 	}
 
+	/**
+	 * Pomoćna metoda koja generira pie chart
+	 * @return
+	 */
 	public JFreeChart getChart() {
 		DefaultPieDataset dataset = new DefaultPieDataset();
 		dataset.setValue("Linux", 10);
