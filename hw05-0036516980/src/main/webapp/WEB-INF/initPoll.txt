@@ -1,0 +1,2 @@
+Vote for your favorite band	Which band is your favorite? Follow the link to vote!	1
+Vote for your favorite sport	Which is sport is your favorite? Follow the link to vote!	2
